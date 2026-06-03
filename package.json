@@ -7,11 +7,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "dev": "vercel dev",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
-    "start:dev": "nest start --watch",
-    "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "vitest",
     "test:watch": "vitest --watch",
@@ -19,13 +16,10 @@
     "test:debug": "vitest --debug",
     "test:e2e": "vitest --config ./test/vitest.e2e.config.ts",
     "prisma:generate": "prisma generate",
-    "prisma:push": "prisma db push",
-    "prisma:migrate": "prisma migrate dev",
-    "prisma:deploy": "prisma migrate deploy",
-    "prisma:studio": "prisma studio",
     "db:push": "dotenv -e .env.development -e .env.production -- node scripts/migrate.js npx prisma db push",
     "db:migrate": "dotenv -e .env.development -e .env.production -- node scripts/migrate.js npx prisma migrate dev",
-    "db:deploy": "dotenv -e .env.development -e .env.production -- node scripts/migrate.js npx prisma migrate deploy"
+    "db:deploy": "dotenv -e .env.development -e .env.production -- node scripts/migrate.js npx prisma migrate deploy",
+    "db:studio": "prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
