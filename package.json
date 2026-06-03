@@ -17,7 +17,15 @@
     "test:watch": "vitest --watch",
     "test:cov": "vitest --coverage",
     "test:debug": "vitest --debug",
-    "test:e2e": "vitest --config ./test/vitest.e2e.config.ts"
+    "test:e2e": "vitest --config ./test/vitest.e2e.config.ts",
+    "prisma:generate": "prisma generate",
+    "prisma:push": "prisma db push",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:deploy": "prisma migrate deploy",
+    "prisma:studio": "prisma studio",
+    "db:push": "cross-env DATABASE_URL=\"postgresql://postgres:lidonghai199541@db.pgwmoogodlbqvzyogsao.supabase.co:5432/postgres\" prisma db push",
+    "db:migrate": "cross-env DATABASE_URL=\"postgresql://postgres:lidonghai199541@db.pgwmoogodlbqvzyogsao.supabase.co:5432/postgres\" prisma migrate dev",
+    "db:deploy": "cross-env DATABASE_URL=\"postgresql://postgres:lidonghai199541@db.pgwmoogodlbqvzyogsao.supabase.co:5432/postgres\" prisma migrate deploy"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -52,6 +60,8 @@
     "@types/supertest": "^7.0.0",
     "@vitest/coverage-v8": "^4.1.5",
     "@vitest/ui": "^4.1.5",
+    "cross-env": "^10.1.0",
+    "dotenv-cli": "^11.0.0",
     "eslint": "^9.18.0",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
