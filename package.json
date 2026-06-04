@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "vercel-build": "prisma generate && nest build",
     "start": "cross-env NODE_ENV=development nest start",
     "start:dev": "cross-env NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -20,9 +21,9 @@
     "test:debug": "vitest --debug",
     "test:e2e": "vitest --config ./test/vitest.e2e.config.ts",
     "prisma:generate": "prisma generate",
-    "db:push": "dotenv -e .env.development -e .env.production -- node scripts/migrate.js npx prisma db push",
-    "db:migrate": "dotenv -e .env.development -e .env.production -- node scripts/migrate.js npx prisma migrate dev",
-    "db:deploy": "dotenv -e .env.development -e .env.production -- node scripts/migrate.js npx prisma migrate deploy",
+    "db:push": "dotenv -e .env.development -- node -e \"require('dotenv').config();process.env.DATABASE_URL=process.env.DATABASE_URL_MIGRATION;require('child_process').execSync('npx prisma db push',{stdio:'inherit',env:process.env})\"",
+    "db:migrate": "dotenv -e .env.development -- node -e \"require('dotenv').config();process.env.DATABASE_URL=process.env.DATABASE_URL_MIGRATION;require('child_process').execSync('npx prisma migrate dev',{stdio:'inherit',env:process.env})\"",
+    "db:deploy": "dotenv -e .env.development -- node -e \"require('dotenv').config();process.env.DATABASE_URL=process.env.DATABASE_URL_MIGRATION;require('child_process').execSync('npx prisma migrate deploy',{stdio:'inherit',env:process.env})\"",
     "db:studio": "prisma studio"
   },
   "dependencies": {
