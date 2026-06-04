@@ -56,7 +56,9 @@ async function bootstrap() {
   return serverlessExpress({ app: expressApp });
 }
 
-export const handler = async (event: APIGatewayProxyEvent, context: Context, callback: any) => {
+const handler = async (event: APIGatewayProxyEvent, context: Context, callback: any) => {
   server = server ?? (await bootstrap());
   return server(event, context, callback);
 };
+
+export default handler;
