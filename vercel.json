@@ -9,18 +9,12 @@
       }
     }
   ],
-  "routes": [
-    {
-      "src": "/api/docs",
-      "dest": "/api/index.ts"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "/api/index.ts"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/index.ts"
-    }
+  "rewrites": [
+    { "source": "/docs", "destination": "/api/index.ts" },
+    { "source": "/docs/(.*)", "destination": "/api/index.ts" },
+    { "source": "/auth/(.*)", "destination": "/api/index.ts" },
+    { "source": "/users/(.*)", "destination": "/api/index.ts" },
+    { "source": "/health", "destination": "/api/index.ts" },
+    { "source": "/(.*)", "destination": "/api/index.ts" }
   ]
 }

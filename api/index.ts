@@ -4,22 +4,23 @@ config();
 import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { AppModule } from '../src/app.module';
 import { HttpExceptionFilter } from '../src/common/filters/http-exception.filter';
 import { TransformInterceptor } from '../src/common/interceptors/transform.interceptor';
 import { LoggingInterceptor } from '../src/common/interceptors/logging.interceptor';
-import serverlessExpress from '@vendia/serverless-express';
-import type { APIGatewayProxyEvent, Context } from 'aws-lambda';
+import express from 'express';
 
-let server: ReturnType<typeof serverlessExpress>;
+const expressApp = express();
+let isInitialized = false;
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  if (isInitialized) return;
 
-  // 全局前缀
-  app.setGlobalPrefix('api');
+  const app = await NestFactory.create(AppModule, new ExpressAdapter(expressApp));
 
-  // 全局管道
+  // Vercel routes handle /api prefix, so no global prefix needed
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
@@ -28,37 +29,28 @@ async function bootstrap() {
     }),
   );
 
-  // 全局过滤器
   app.useGlobalFilters(new HttpExceptionFilter());
-
-  // 全局拦截器
   app.useGlobalInterceptors(
     new LoggingInterceptor(),
     new TransformInterceptor(),
   );
 
-  // 跨域资源共享
   app.enableCors();
 
-  // Swagger 文档
-  const config = new DocumentBuilder()
+  const swaggerConfig = new DocumentBuilder()
     .setTitle('NestJS Supabase API')
     .setDescription('Enterprise NestJS API with Supabase integration')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api/docs', app, document);
+  const document = SwaggerModule.createDocument(app, swaggerConfig);
+  SwaggerModule.setup('docs', app, document);
 
   await app.init();
-
-  const expressApp = app.getHttpAdapter().getInstance();
-  return serverlessExpress({ app: expressApp });
+  isInitialized = true;
 }
 
-const handler = async (event: APIGatewayProxyEvent, context: Context, callback: any) => {
-  server = server ?? (await bootstrap());
-  return server(event, context, callback);
-};
-
-export default handler;
+export default async function handler(req: any, res: any) {
+  await bootstrap();
+  expressApp(req, res);
+}
